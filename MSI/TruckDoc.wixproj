@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <OutputType>Package</OutputType>
+    <OutputName>TruckDoc</OutputName>
+    <WixLangId>1033</WixLangId>
+    <DefineConstants>TruckDocAppDir=W:\TruckDocApp\</DefineConstants>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <OutputPath>Output\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <DefineConstants>TruckDocAppDir=W:\TruckDocApp\</DefineConstants>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <Compile Include="Product.wxs" />
+    <Compile Include="CustomActions.wxs" />
+    <Compile Include="UI.wxs" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="WixToolset.UI.wixext" Version="7.0.0-rc.1" />
+  </ItemGroup>
+  
+  <Import Project="$(MSBuildExtensionsPath)\WiXToolset\Wix.targets" />
+</Project>

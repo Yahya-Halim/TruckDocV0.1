@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package Name="TruckDoc" 
+           Manufacturer="TruckDoc Solutions" 
+           Version="1.0.0.0" 
+           UpgradeCode="12345678-1234-5678-9ABC-123456789ABC"
+           Language="1033">
+    
+    <SummaryInformation Description="TruckDoc Application Installer"
+                        Comments="TruckDoc - Truck Documentation Management System" />
+
+    <StandardDirectory Id="ProgramFilesFolder">
+      <Directory Id="INSTALLFOLDER" Name="TruckDoc" />
+    </StandardDirectory>
+    
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ApplicationProgramsFolder" Name="TruckDoc"/>
+    </StandardDirectory>
+    
+    <StandardDirectory Id="DesktopFolder" Name="Desktop" />
+
+    <Feature Id="ProductFeature" Title="TruckDoc" Level="1">
+      <ComponentGroupRef Id="ProductComponents" />
+      <ComponentRef Id="ApplicationShortcut" />
+      <ComponentRef Id="DesktopShortcut" />
+    </Feature>
+
+    <MediaTemplate EmbedCab="yes" />
+
+    <!-- Application Components -->
+    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      <!-- Main Executable -->
+      <Component Id="MainExecutable" Guid="12345678-ABCD-EFGH-IJKL-123456789ABC">
+        <File Id="WpfTruckDocEXE" 
+              Source="$(var.TruckDocAppDir)WpfTruckDoc.exe" 
+              KeyPath="yes" />
+      </Component>
+      
+      <!-- DLL Files -->
+      <Component Id="DataAccessInterfaceDLL" Guid="12345678-ABCD-EFGH-IJKL-123456789ABD">
+        <File Id="DataAccessInterfaceDLL" 
+              Source="$(var.TruckDocAppDir)DataAccessInterface.dll" />
+      </Component>
+      
+      <Component Id="DataAccessLayerDLL" Guid="12345678-ABCD-EFGH-IJKL-123456789ABE">
+        <File Id="DataAccessLayerDLL" 
+              Source="$(var.TruckDocAppDir)DataAccessLayer.dll" />
+      </Component>
+      
+      <Component Id="DataDomainDLL" Guid="12345678-ABCD-EFGH-IJKL-123456789ABF">
+        <File Id="DataDomainDLL" 
+              Source="$(var.TruckDocAppDir)DataDomain.dll" />
+      </Component>
+      
+      <Component Id="LogicLayerDLL" Guid="12345678-ABCD-EFGH-IJKL-123456789AC0">
+        <File Id="LogicLayerDLL" 
+              Source="$(var.TruckDocAppDir)LogicLayer.dll" />
+      </Component>
+      
+      <Component Id="LogicLayerInterfaceDLL" Guid="12345678-ABCD-EFGH-IJKL-123456789AC1">
+        <File Id="LogicLayerInterfaceDLL" 
+              Source="$(var.TruckDocAppDir)LogicLayerInterface.dll" />
+      </Component>
+      
+      <Component Id="SystemDataSqlClientDLL" Guid="12345678-ABCD-EFGH-IJKL-123456789AC2">
+        <File Id="SystemDataSqlClientDLL" 
+              Source="$(var.TruckDocAppDir)System.Data.SqlClient.dll" />
+      </Component>
+      
+      <!-- Configuration Files -->
+      <Component Id="ConfigFiles" Guid="12345678-ABCD-EFGH-IJKL-123456789AC3">
+        <File Id="DepsJSON" 
+              Source="$(var.TruckDocAppDir)WpfTruckDoc.deps.json" />
+        <File Id="RuntimeConfigJSON" 
+              Source="$(var.TruckDocAppDir)WpfTruckDoc.runtimeconfig.json" />
+        <File Id="DLLConfig" 
+              Source="$(var.TruckDocAppDir)WpfTruckDoc.dll.config" />
+      </Component>
+      
+      <!-- Runtime Files -->
+      <Component Id="RuntimeFiles" Guid="12345678-ABCD-EFGH-IJKL-123456789AC4">
+        <ComponentGroupRef Id="RuntimeComponents" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- Runtime Components Group -->
+    <ComponentGroup Id="RuntimeComponents" Directory="INSTALLFOLDER">
+      <Component Id="RuntimeX64" Guid="12345678-ABCD-EFGH-IJKL-123456789AC5">
+        <File Id="RuntimeX64SNI" 
+              Source="$(var.TruckDocAppDir)runtimes\win-x64\native\sni.dll" />
+      </Component>
+      
+      <Component Id="RuntimeX86" Guid="12345678-ABCD-EFGH-IJKL-123456789AC6">
+        <File Id="RuntimeX86SNI" 
+              Source="$(var.TruckDocAppDir)runtimes\win-x86\native\sni.dll" />
+      </Component>
+      
+      <Component Id="RuntimeARM64" Guid="12345678-ABCD-EFGH-IJKL-123456789AC7">
+        <File Id="RuntimeARM64SNI" 
+              Source="$(var.TruckDocAppDir)runtimes\win-arm64\native\sni.dll" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- Start Menu Shortcut -->
+    <Component Id="ApplicationShortcut" Directory="ApplicationProgramsFolder" Guid="12345678-ABCD-EFGH-IJKL-123456789AC8">
+      <Shortcut Id="ApplicationStartMenuShortcut"
+                Name="TruckDoc"
+                Description="Truck Documentation Management System"
+                Target="[#WpfTruckDocEXE]"
+                WorkingDirectory="INSTALLFOLDER"
+                Icon="TruckDocIcon.exe" />
+      <RegistryValue Root="HKCU" 
+                     Key="Software\TruckDoc Solutions\TruckDoc" 
+                     Name="installed" 
+                     Type="integer" 
+                     Value="1" 
+                     KeyPath="yes"/>
+      <RemoveFolder Id="RemoveApplicationProgramsFolder" On="uninstall"/>
+    </Component>
+
+    <!-- Desktop Shortcut (Optional) -->
+    <Component Id="DesktopShortcut" Directory="DesktopFolder" Guid="12345678-ABCD-EFGH-IJKL-123456789AC9">
+      <Condition>INSTALLDESKTOPSHORTCUT</Condition>
+      <Shortcut Id="ApplicationDesktopShortcut"
+                Name="TruckDoc"
+                Description="Truck Documentation Management System"
+                Target="[#WpfTruckDocEXE]"
+                WorkingDirectory="INSTALLFOLDER"
+                Icon="TruckDocIcon.exe" />
+      <RegistryValue Root="HKCU" 
+                     Key="Software\TruckDoc Solutions\TruckDoc" 
+                     Name="desktop_shortcut" 
+                     Type="integer" 
+                     Value="1" 
+                     KeyPath="yes"/>
+    </Component>
+
+    <!-- UI Properties -->
+    <Property Id="ARPPRODUCTICON" Value="TruckDocIcon.exe" />
+    <Property Id="INSTALLDESKTOPSHORTCUT" Value="1" />
+    
+    <!-- Icon Definition -->
+    <Icon Id="TruckDocIcon.exe" SourceFile="$(var.TruckDocAppDir)WpfTruckDoc.exe" />
+    
+    <!-- Custom Action for Taskbar Pinning -->
+    <Binary Id="PinToTaskbarVBS" SourceFile="$(var.TruckDocAppDir)PinToTaskbar.vbs" />
+    
+    <CustomAction Id="PinToTaskbar"
+                  BinaryKey="PinToTaskbarVBS"
+                  VBScriptCall=""
+                  Execute="deferred"
+                  Return="ignore"
+                  Impersonate="yes" />
+    
+    <InstallExecuteSequence>
+      <Custom Action="PinToTaskbar" After="InstallFinalize">
+        NOT Installed AND PIN_TO_TASKBAR = "1"
+      </Custom>
+    </InstallExecuteSequence>
+
+    <!-- UI Dialogs -->
+    <UIRef Id="WixUI_InstallDir" />
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    
+    <!-- Taskbar Pinning Property -->
+    <Property Id="PIN_TO_TASKBAR" Secure="yes" />
+    
+    <!-- Custom UI for Taskbar Pinning Option -->
+    <UI>
+      <Dialog Id="CustomExitDialog" Width="370" Height="270" Title="[ProductName] Setup">
+        <Control Id="Finish" Type="PushButton" X="236" Y="243" Width="64" Height="17" Default="yes" Cancel="yes" Text="Finish">
+          <Publish Event="EndDialog" Value="Return">1</Publish>
+        </Control>
+        
+        <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="64" Height="17" Text="Cancel">
+          <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+        </Control>
+        
+        <Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="234" TabSkip="no" Text="WixUI_Bmp_Dialog" />
+        
+        <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="&amp;Back">
+          <Publish Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+        </Control>
+        
+        <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+        
+        <Control Id="Description" Type="Text" X="135" Y="80" Width="220" Height="40" Transparent="yes" NoPrefix="yes" Text="Completed the [ProductName] Setup Wizard." />
+        
+        <Control Id="Title" Type="Text" X="135" Y="20" Width="220" Height="40" Transparent="yes" NoPrefix="yes" Text="{\WixUI_Font_Title}Completed [ProductName] Setup Wizard" />
+        
+        <Control Id="PinToTaskbarCheckbox" Type="CheckBox" X="135" Y="140" Width="220" Height="17" Property="PIN_TO_TASKBAR" CheckBoxValue="1" Text="Pin TruckDoc to taskbar" />
+        
+        <Control Id="LaunchProduct" Type="PushButton" X="135" Y="200" Width="220" Height="17" Text="Launch [ProductName]">
+          <Publish Event="DoAction" Value="PinToTaskbar">PIN_TO_TASKBAR = "1"</Publish>
+          <Publish Event="SpawnWaitDialog" Value="WaitForCostingDlg">CostingComplete = 1</Publish>
+          <Publish Event="EndDialog" Value="Return">1</Publish>
+        </Control>
+      </Dialog>
+    </UI>
+  </Package>
+</Wix>

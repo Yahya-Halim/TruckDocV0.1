@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Fragment>
+    <!-- UI Extension Reference -->
+    <UIRef Id="WixUI_InstallDir" />
+    
+    <!-- Custom Exit Dialog with Taskbar Pinning Option -->
+    <UI>
+      <Dialog Id="CustomExitDialog" Width="370" Height="270" Title="[ProductName] Setup" NoBanner="yes">
+        <Control Id="Finish" Type="PushButton" X="236" Y="243" Width="64" Height="17" Default="yes" Cancel="yes" Text="Finish">
+          <Publish Event="EndDialog" Value="Return">1</Publish>
+        </Control>
+        
+        <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="64" Height="17" Text="Cancel">
+          <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+        </Control>
+        
+        <Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="234" TabSkip="no" Text="WixUI_Bmp_Dialog" />
+        
+        <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="&amp;Back">
+          <Publish Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+        </Control>
+        
+        <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+        
+        <Control Id="Description" Type="Text" X="135" Y="80" Width="220" Height="40" Transparent="yes" NoPrefix="yes" Text="Completed the [ProductName] Setup Wizard." />
+        
+        <Control Id="Title" Type="Text" X="135" Y="20" Width="220" Height="40" Transparent="yes" NoPrefix="yes" Text="{\WixUI_Font_Title}Completed [ProductName] Setup Wizard" />
+        
+        <Control Id="PinToTaskbarCheckbox" Type="CheckBox" X="135" Y="140" Width="220" Height="17" Property="PIN_TO_TASKBAR" CheckBoxValue="1" Text="Pin TruckDoc to taskbar" />
+        
+        <Control Id="LaunchProduct" Type="PushButton" X="135" Y="200" Width="220" Height="17" Text="Launch [ProductName]">
+          <Publish Event="DoAction" Value="PinToTaskbar">PIN_TO_TASKBAR = "1"</Publish>
+          <Publish Event="SpawnWaitDialog" Value="WaitForCostingDlg">CostingComplete = 1</Publish>
+          <Publish Event="EndDialog" Value="Return">1</Publish>
+        </Control>
+      </Dialog>
+      
+      <!-- Override the ExitDialog sequence -->
+      <Publish Dialog="ExitDialog" Control="Finish" Event="NewDialog" Value="CustomExitDialog">1</Publish>
+    </UI>
+  </Fragment>
+</Wix>

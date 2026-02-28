@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Fragment>
+    <!-- Custom Action for Taskbar Pinning -->
+    <Binary Id="PinToTaskbarVBS" SourceFile="PinToTaskbarCA.vbs" />
+    
+    <CustomAction Id="SetPinToTaskbarData"
+                  Property="PinToTaskbar"
+                  Value="[INSTALLFOLDER]" />
+    
+    <CustomAction Id="PinToTaskbar"
+                  BinaryKey="PinToTaskbarVBS"
+                  VBScriptCall=""
+                  Execute="deferred"
+                  Return="ignore"
+                  Impersonate="yes" />
+    
+    <InstallExecuteSequence>
+      <Custom Action="SetPinToTaskbarData" Before="PinToTaskbar">
+        NOT Installed AND PIN_TO_TASKBAR = "1"
+      </Custom>
+      <Custom Action="PinToTaskbar" After="InstallFinalize">
+        NOT Installed AND PIN_TO_TASKBAR = "1"
+      </Custom>
+    </InstallExecuteSequence>
+  </Fragment>
+</Wix>
